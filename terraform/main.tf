@@ -1,4 +1,4 @@
-resource "azurerm_resource_group" "example" {
-    name = "example-resource-group-from-tf"
+resource "azurerm_resource_group" "rg-aks-cluster-tf" {
+    name = "rg-aks-cluster-tf"
     location = "East US"
 }
