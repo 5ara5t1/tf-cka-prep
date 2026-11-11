@@ -3,6 +3,12 @@ trigger:
     include:
       - main
 
+parameters:
+  - name: destroy
+    displayName: "Destroy all resources?"
+    type: boolean
+    default: false
+
 pool:
   vmImage: ubuntu-latest
 
@@ -48,7 +54,7 @@ stages:
               provider: "azurerm"
               command: "plan"
               environmentServiceNameAzureRM: "azure-terraform-service-connection"
-              commandOptions: "-out=$(Build.ArtifactStagingDirectory)/tfplan"
+              commandOptions: "${{ if parameters.destroy}}-destroy ${{ end }}-var-file=environments/prod/prod.tfvars -out=$(Build.ArtifactStagingDirectory)/tfplan"
               workingDirectory: "$(tfDir)"
           
           - task: PublishBuildArtifacts@1
