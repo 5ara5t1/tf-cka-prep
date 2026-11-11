@@ -48,7 +48,7 @@ stages:
               provider: "azurerm"
               command: "plan"
               environmentServiceNameAzureRM: "azure-terraform-service-connection"
-              commandOptions: "-out=$(Build.ArtifactStagingDirectory)/tfplan"
+              commandOptions: "-var-file=environments/prod/prod.tfvars -out=$(Build.ArtifactStagingDirectory)/tfplan"
               workingDirectory: "$(tfDir)"
           
           - task: PublishBuildArtifacts@1
