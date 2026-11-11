@@ -17,6 +17,12 @@ variables:
     value: "1.17.2"
   - name: tfDir
     value: "$(System.DefaultWorkingDirectory)/terraform"
+  - ${{ if eq(parameters.destroy, true) }}:
+      - name: destroyFlag
+        value: "-destroy"
+  - ${{ else }}:
+      - name: destroyFlag
+        value: ""
 
 stages:
   - stage: ValidateAndPlan
@@ -54,7 +60,7 @@ stages:
               provider: "azurerm"
               command: "plan"
               environmentServiceNameAzureRM: "azure-terraform-service-connection"
-              commandOptions: "${{ if parameters.destroy}}-destroy ${{ end }}-var-file=environments/prod/prod.tfvars -out=$(Build.ArtifactStagingDirectory)/tfplan"
+              commandOptions: "$(destroyFlag) -var-file=environments/prod/prod.tfvars -out=$(Build.ArtifactStagingDirectory)/tfplan"
               workingDirectory: "$(tfDir)"
           
           - task: PublishBuildArtifacts@1
