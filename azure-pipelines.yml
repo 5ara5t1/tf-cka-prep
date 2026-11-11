@@ -51,5 +51,28 @@ stages:
           - task: PublishBuildArtifacts@1
             displayName: "Publish plan artifact"
             inputs:
-              PathtoPublish: "$(Build.ArtifactsStagingDirectory)"
+              PathtoPublish: "$(Build.ArtifactStagingDirectory)"
               ArtifactName: "tfplan"
+  
+  - stage: Apply
+    displayName: "Apply to Production"
+    dependsOn: ValidateAndPlan
+    condition: succeeded()
+    jobs:
+      - deployment: ApplyProd
+        environment: "prod"
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: tfplan
+
+                - task: TerraformTaskV4@4
+                  displayName: "terraform apply"
+                  inputs:
+                    provider: "azurerm"
+                    command: "apply"
+                    environmentServiceNameAzureRM: "azure-terraform-service-connection"
+                    commandOptions: "-auto-approve $(Pipeline.Workspace)/tfplan/tfplan"
+                    workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
