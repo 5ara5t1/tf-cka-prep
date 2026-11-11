@@ -1,5 +1,5 @@
 
-resource "azurerm_resource_group" "aks-cluster-rg-tf" {
-    name = "aks-cluster-rg-tf"
+resource "azurerm_resource_group" "rg-aks-cluster-tf" {
+    name = "rg-aks-cluster-tf"
     location = "East US"
 }
