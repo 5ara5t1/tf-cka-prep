@@ -8,7 +8,7 @@ pool:
 
 variables:
   - name: terraformVersion
-    value: "1.9.8"
+    value: "1.17.2"
   - name: tfDir
     value: "$(System.DefaultWorkingDirectory)/terraform"
 
