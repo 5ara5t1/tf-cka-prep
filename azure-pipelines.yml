@@ -1,0 +1,55 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - group: terraform-common
+  - name: terraformVersion
+    value: "1.9.8"
+
+stages:
+  - stage: ValidateAndPlan
+    displayName: "Validate and Plan"
+    jobs:
+      - job: Plan
+        steps:
+          - task: TerraformInstaller@1
+            displayName: "Install Terraform"
+            inputs:
+              terraform: $(terraformVersion)
+          
+          - task: TerraformTaskV4@4
+            displayName: "terraform init"
+            inputs:
+              provider: "azurerm"
+              command: "init"
+              backendServiceArm: "azure-terraform-service-connection"
+              backendAzureRmResourceGroupName: "rg-tfstate"
+              backendAzureRmStorageAccountName: "ckapreptfstate"
+              backendAzureRmContainerName: "tfstate"
+              backendAzureRmKey: "prod/terraform.tfstate"
+          
+          - task: TerraformTaskV4@4
+            displayName: "terraform validate"
+            inputs:
+              provider: "azurerm"
+              command: "validate"
+          
+          - task: TerraformTaskV4@4
+            displayName: "terraform plan"
+            inputs:
+              provider: "azurerm"
+              command: "plan"
+              environmentServiceNameAzureRM: "azure-terraform-service-connection"
+              commandOptions: "-out=$(Build.ArtifactStagingDirectory)/tfplan"
+              workingDirectory: "${System.DefaultWorkingDirectory}/terraform"
+          
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish plan artifact"
+            inputs:
+              PathtoPublish: "$(Build.ArtifactsStagingDirectory)"
+              ArtifactName: "tfplan"
