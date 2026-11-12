@@ -39,7 +39,7 @@ push to main ─► Validate & Plan ──────────────�
                 • publish plan as an artifact
 ```
 
-- **Trigger:** any push to `main`. The Apply stage only runs for `main`.
+- **Trigger:** pushes to `main` that change `terraform/` or `azure-pipelines.yml`. Docs-only changes don't start a run. The Apply stage only runs for `main`.
 - **Approval gate:** the Apply stage targets the ADO environment `prod`, which has an approval check.
 - **Exact apply:** Apply runs the plan file created in the plan stage, so it does exactly what you approved.
 - **Authentication:** an Azure Resource Manager service connection. No credentials are stored in the repo.

@@ -2,6 +2,10 @@ trigger:
   branches:
     include:
       - main
+  paths:
+    include:
+      - terraform
+      - azure-pipelines.yml
 
 parameters:
   - name: destroy
