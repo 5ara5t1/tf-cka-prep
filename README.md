@@ -36,8 +36,9 @@ Values come from [`terraform/environments/prod/prod.tfvars`](terraform/environme
 ```
 .
 ├── azure-pipelines.yml          # CI/CD: validate → plan → approval → apply (or destroy)
-├── docs/
-│   └── pipeline-run.png         # screenshot used in this README
+|
+├── pipeline-run.png         # screenshot used in this README
+├── README
 └── terraform/
     ├── backend.tf               # remote state in Azure Blob Storage
     ├── providers.tf             # Terraform + azurerm version pins
