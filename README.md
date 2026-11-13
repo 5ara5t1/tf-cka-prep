@@ -1,8 +1,25 @@
 # tf-cka-prep
 
+This repository is a public clone of a private Azure DevOps repository. All changes in the ADO repo will be reflected here.
+
 Terraform and an Azure DevOps pipeline that create and destroy a small, low-cost AKS cluster for Kubernetes (CKA) practice.
 
 Every change goes through **plan → manual approval → apply**. The same pipeline can tear everything down, so the cluster only runs while you're studying.
+
+## Pipeline run
+
+<!-- Screenshot: save the image as docs/pipeline-run.png, then delete this comment. -->
+![Azure DevOps run of tf-cka-prep: Validate and Plan, then Apply to Production](pipeline-run.png)
+
+A run on `main`: the plan stage passes, the apply stage waits for approval, then Terraform creates the resource group and the AKS cluster.
+
+## Scope and limits
+
+Most exam topics can be practiced in this sandbox: troubleshooting workloads, scheduling, services and networking, storage, and RBAC.
+
+Tasks that need access to the control plane cannot, because AKS manages it. That covers installing and upgrading clusters with kubeadm, etcd backup and restore, and control-plane troubleshooting.
+
+In the future, another pipeline will be created to deploy four VMs to practice installing, updating, and managing Kubernetes with kubeadm.
 
 ## What it deploys
 
@@ -19,6 +36,8 @@ Values come from [`terraform/environments/prod/prod.tfvars`](terraform/environme
 ```
 .
 ├── azure-pipelines.yml          # CI/CD: validate → plan → approval → apply (or destroy)
+├── docs/
+│   └── pipeline-run.png         # screenshot used in this README
 └── terraform/
     ├── backend.tf               # remote state in Azure Blob Storage
     ├── providers.tf             # Terraform + azurerm version pins
@@ -96,7 +115,3 @@ kubectl get nodes
   az aks stop -g rg-aks-cluster-tf -n aks-cluster-tf    # az aks start to resume
   ```
 - **Lowest cost:** run the pipeline's destroy option when you're not using the cluster. You can re-create it from `main` in about 10 minutes.
-
-## Why AKS and not only kubeadm?
-
-AKS manages the control plane. That makes it good for practising workloads, scheduling, services, networking, storage and RBAC with `kubectl`. It can't be used for the kubeadm, etcd backup/restore and control-plane troubleshooting parts of the CKA. Those need self-managed VMs.
