@@ -1,3 +1,6 @@
 .terraform/
 *.tfstate*
 tfplan
+*.tfvars
+*.auto.tfvars
+secrets.tfvars
