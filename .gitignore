@@ -4,3 +4,4 @@ tfplan
 *.tfvars
 *.auto.tfvars
 secrets.tfvars
+terraform/environments/prod/*.tfvars
